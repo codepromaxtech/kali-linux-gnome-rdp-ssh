@@ -15,22 +15,26 @@ RUN apt update && apt upgrade -y && apt dist-upgrade -y && \
     tightvncserver \
     kali-linux-large \  # Install all the tools from the Kali Linux Large set
     openssh-server \  # Install SSH server
+    supervisor \  # Install Supervisor
     && apt clean
 
-# Enable and start xrdp service
-RUN systemctl enable xrdp
-
-# Set the default user (you can change the username and password)
-RUN useradd -ms /bin/bash kali && echo "kali:kali" | chpasswd && adduser kali sudo
-
-# Configure xrdp to listen on port 3355
+# Enable and configure xrdp service to listen on port 3355
 RUN sed -i 's/3389/3355/' /etc/xrdp/xrdp.ini
 
 # Configure SSH to listen on port 3344
 RUN sed -i 's/#Port 22/Port 3344/' /etc/ssh/sshd_config
 
-# Expose custom RDP and SSH ports
+# Set the default user (you can change the username and password)
+RUN useradd -ms /bin/bash kali && echo "kali:kali" | chpasswd && adduser kali sudo
+
+# Expose the custom RDP and SSH ports
 EXPOSE 3355 3344
 
-# Start the supervisor to manage services
-CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+# Copy the Supervisor configuration file to the container
+COPY supervisord.conf /etc/supervisor/supervisord.conf
+
+# Create the required directories for logs (optional, if you want to manage logs)
+RUN mkdir -p /var/log/supervisor
+
+# Start Supervisor as the main process in the container
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
