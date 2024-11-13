@@ -1,7 +1,7 @@
 FROM kalilinux/kali-rolling
 
 # Update and install necessary packages
-RUN apt update && apt upgrade -y && apt dist-upgrade -y && \
+RUN apt update && apt upgrade -y \
     apt install -y \
     kali-linux-large \
     xrdp \
