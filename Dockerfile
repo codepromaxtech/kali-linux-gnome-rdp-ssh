@@ -3,14 +3,11 @@ FROM kalilinux/kali-rolling
 # Update and install necessary packages
 RUN apt update && apt upgrade -y && apt dist-upgrade -y && \
     apt install -y \
-    kali-desktop-xfce \
-    xfce4 \
-    xfce4-goodies \
+    kali-linux-large \
     xrdp \
     dbus-x11 \
     sudo \
-    tightvncserver \
-    kali-linux-large && \
+    tightvncserver && \
     apt clean
 
 # Enable SSH and RDP
