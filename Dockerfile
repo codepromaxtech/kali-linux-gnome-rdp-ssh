@@ -1,9 +1,9 @@
 FROM kalilinux/kali-rolling
 
-# Install GNOME desktop environment and other necessary tools
+# Update and install the necessary packages
 RUN apt-get update && apt-get install -y \
     kali-desktop-gnome \   # Install the GNOME desktop environment
-    gnome-core \            # Install GNOME core packages
+    gnome-shell \           # Install GNOME Shell (instead of gnome-core, as core may be unavailable)
     xrdp \                  # Install xRDP for remote desktop access
     dbus-x11 \              # Install D-Bus (required for GNOME)
     sudo \                  # Install sudo for privilege escalation
