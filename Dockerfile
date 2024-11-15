@@ -1,16 +1,7 @@
 FROM kalilinux/kali-rolling:latest
 
 # Update package list and install necessary dependencies
-RUN apt-get update && apt-get install -y \
-    sudo \
-    xfce4 \
-    xfce4-goodies \
-    xorg \
-    tightvncserver \
-    kali-desktop-xfce \
-    browser \
-    xrdp \
-    && apt-get clean
+RUN apt-get update && apt-get install -y sudo xfce4 xfce4-goodies xorg tightvncserver kali-desktop-xfce browser xrdp && apt-get clean
 
 # Setup VNC server
 RUN mkdir -p ~/.vnc && \
