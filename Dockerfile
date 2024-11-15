@@ -1,12 +1,27 @@
-FROM kalilinux/kali-rolling
+FROM kalilinux/kali-rolling:latest
 
-# Update and install necessary packages
-RUN apt update && \
-    apt -y install kali-linux-large openssh-server && \
-    systemctl enable ssh && \
-    systemctl start ssh
-# Expose SSH and RDP ports
-EXPOSE 22 
+# Update package list and install necessary dependencies
+RUN apt-get update && apt-get install -y \
+    sudo \
+    xfce4 \
+    xfce4-goodies \
+    xorg \
+    tightvncserver \
+    kali-desktop-xfce \
+    browser \
+    xrdp \
+    && apt-get clean
 
-# Start SSH and xRDP services
-CMD ["/usr/sbin/sshd", "-D"]
+# Setup VNC server
+RUN mkdir -p ~/.vnc && \
+    echo "password" | vncpasswd -f > ~/.vnc/passwd && \
+    chmod 600 ~/.vnc/passwd
+
+# Expose ports for VNC and RDP
+EXPOSE 5901
+EXPOSE 3389
+
+# Start the services
+CMD tightvncserver :1 -geometry 1280x1024 -depth 24 && \
+    xrdp-sesman && \
+    xrdp
