@@ -24,14 +24,17 @@ RUN mkdir -p /root/.vnc && \
 # Create .Xauthority file for X11 authentication
 RUN touch /root/.Xauthority
 
+# Ensure xrdp-sesman service script is created
+RUN ln -s /usr/sbin/xrdp-sesman /etc/init.d/xrdp-sesman || true
+
 # Create the startup script directly in the Dockerfile
 RUN echo '#!/bin/bash\n\
 # Start VNC server\n\
 tightvncserver :1 -geometry 1280x1024 -depth 24\n\
-# Start XRDP session manager\n\
-service xrdp-sesman start\n\
+# Manually start xrdp-sesman if not found\n\
+/usr/sbin/xrdp-sesman &\n\
 # Start XRDP server\n\
-service xrdp start\n\
+/usr/sbin/xrdp &\n\
 # Keep the container running\n\
 tail -f /dev/null' > /root/startup.sh && \
     chmod +x /root/startup.sh
