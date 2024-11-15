@@ -2,8 +2,8 @@ FROM kalilinux/kali-rolling:latest
 # Set the environment variable to avoid the 'USER' not set error
 ENV USER=root
 # Update package list and install necessary dependencies
-RUN apt-get update && apt-get install -y sudo xfce4 xfce4-goodies xorg tightvncserver kali-desktop-xfce xrdp kali-linux-headless && apt-get clean
-
+RUN apt-get update && apt-get install -y sudo xfce4 xfce4-goodies xorg tightvncserver kali-desktop-xfce xrdp && apt-get clean
+RUN apt-get install kali-linux-headless -y
 # Setup VNC server
 RUN mkdir -p ~/.vnc && \
     echo "password" | vncpasswd -f > ~/.vnc/passwd && \
