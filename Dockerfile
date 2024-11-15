@@ -1,19 +1,9 @@
-FROM kalilinux/kali-rolling:latest
-# Set the environment variable to avoid the 'USER' not set error
+FROM debian:bullseye-slim
+
 ENV USER=root
-# Update package list and install necessary dependencies
-RUN apt-get update && apt-get install -y sudo nano xfce4 xfce4-goodies xorg tightvncserver kali-desktop-xfce xrdp
-RUN apt -y install kali-linux-headless && apt-get clean && rm -rf /var/lib/apt/lists/*
-# Setup VNC server
-RUN mkdir -p ~/.vnc && \
-    echo "password" | vncpasswd -f > ~/.vnc/passwd && \
-    chmod 600 ~/.vnc/passwd
 
-# Expose ports for VNC and RDP
-EXPOSE 5901
-EXPOSE 3389
+RUN apt-get update && apt-get install -y sudo xfce4 xfce4-goodies xorg tightvncserver xrdp kali-desktop-xfce && apt-get clean && rm -rf /var/lib/apt/lists/* && mkdir -p ~/.vnc && touch ~/.Xauthority && chmod 600 ~/.Xauthority && echo "password" | vncpasswd -f > ~/.vnc/passwd && chmod 600 ~/.vnc/passwd && echo -e "#!/bin/sh\nxrdb $HOME/.Xresources\nstartxfce4 &" > ~/.vnc/xstartup && chmod +x ~/.vnc/xstartup
 
-# Start the services
-CMD tightvncserver :1 -geometry 1280x1024 -depth 24 && \
-    xrdp-sesman && \
-    xrdp
+EXPOSE 5901 3389
+
+CMD tightvncserver :1 -geometry 1280x1024 -depth 24 && xrdp-sesman && xrdp
